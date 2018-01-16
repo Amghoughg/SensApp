@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_normal_corner_radius">20dp</dimen>
+    <dimen name="button_width">200dp</dimen>
+    <dimen name="button_height">56dp</dimen>
+    <dimen name="button_round">56dp</dimen>
+</resources>
