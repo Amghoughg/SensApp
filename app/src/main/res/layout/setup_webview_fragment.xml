@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/grant_permission_button"/>
+
+    <com.dd.morphingbutton.MorphingButton
+        android:id="@+id/grant_permission_button"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:text="@string/accept"
+        android:textColor="@color/light"
+        android:layout_marginTop="16dp"/>
+
+</RelativeLayout>
