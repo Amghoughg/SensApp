@@ -13,12 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.dd.morphingbutton.MorphingButton;
 
-import it.cnr.iit.sensapp.MainActivity;
-import it.cnr.iit.sensapp.PreferencesController;
 import it.cnr.iit.sensapp.R;
-import it.cnr.iit.sensapp.setup.fragments.SetupAppStatisticsFragment;
-import it.cnr.iit.sensapp.setup.fragments.SetupAutoStartFragment;
-import it.cnr.iit.sensapp.setup.fragments.SetupInstagramFragment;
 import it.cnr.iit.sensapp.setup.fragments.SetupPermissionsFragment;
 import it.cnr.iit.sensapp.setup.fragments.SetupPowerFragment;
 import it.cnr.iit.sensapp.setup.fragments.SetupPrivacyFragment;
@@ -27,9 +22,8 @@ import it.cnr.iit.sensapp.setup.fragments.SetupTermsFragment;
 public class SetupActivity extends AppCompatActivity {
 
     public static final int REQ_IGNORE_BATTERY_OPT = 1;
-    public static final String SETUP_PREF_KEY = "setupComplete";
 
-    private Fragment[] fragments = new Fragment[3];
+    private Fragment[] fragments = new Fragment[2];
 
     private CustomViewPager mPager;
 
@@ -44,7 +38,7 @@ public class SetupActivity extends AppCompatActivity {
         //fragments[2] = new SetupPermissionsFragment();
         //fragments[3] = new SetupPowerFragment();
         //fragments[4] = new SetupAppStatisticsFragment();
-        fragments[2] = new SetupInstagramFragment();
+        //fragments[5] = new SetupInstagramFragment();
         //fragments[6] = new SetupAutoStartFragment();
 
         // Instantiate a ViewPager and a PagerAdapter.
@@ -179,17 +173,5 @@ public class SetupActivity extends AppCompatActivity {
         }
     }
 
-    //==============================================================================================
-    // Setup complete
-    //==============================================================================================
-    public void onSetupComplete(){
 
-        PreferencesController.storeSetupComplete(this);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(SETUP_PREF_KEY, true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
 }

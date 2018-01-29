@@ -51,7 +51,7 @@ public class SetupAutoStartFragment extends Fragment {
                         }
                     }, BUTTON_ANIM_DURATION);
                 }else{
-                        ((SetupActivity)getActivity()).onSetupComplete();
+                        //((SetupActivity)getActivity()).onSetupComplete();
                 }
             }
         });

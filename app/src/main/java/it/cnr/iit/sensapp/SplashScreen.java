@@ -21,7 +21,7 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
 
                 Class<?> classToJump = (PreferencesController.isSetupComplete(
-                        SplashScreen.this) ? MainActivity.class : SetupActivity.class);
+                        SplashScreen.this) ? MainTwitter.class : SetupActivity.class);
 
                 startActivity(new Intent(SplashScreen.this, classToJump));
 

@@ -1,9 +1,9 @@
 package it.cnr.iit.sensapp.setup.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +14,7 @@ import com.dd.morphingbutton.MorphingButton;
 
 import it.cnr.iit.sensapp.R;
 import it.cnr.iit.sensapp.setup.SetupActivity;
+import it.cnr.iit.sensapp.setup.TwitterLoginActivity;
 import it.cnr.iit.sensapp.setup.Utils;
 
 public class SetupPrivacyFragment extends Fragment {
@@ -47,7 +48,11 @@ public class SetupPrivacyFragment extends Fragment {
                     @Override
                     public void run() {
 
-                        ((SetupActivity)getActivity()).nextFragment(1);
+                        //((SetupActivity)getActivity()).nextFragment(1);
+                        Intent intent = new Intent(getContext(), TwitterLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        getActivity().finish();
 
                     }
                 }, BUTTON_ANIM_DURATION*2);

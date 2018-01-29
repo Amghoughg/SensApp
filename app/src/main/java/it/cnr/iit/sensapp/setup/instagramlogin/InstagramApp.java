@@ -70,7 +70,7 @@ public class InstagramApp {
         mTokenUrl = TOKEN_URL + "?client_id=" + clientId + "&client_secret="
                 + clientSecret + "&redirect_uri=" + mCallbackUrl + "&grant_type=authorization_code";
         mAuthUrl = AUTH_URL + "?client_id=" + clientId + "&redirect_uri="
-                + mCallbackUrl + "&response_type=code&display=touch&scope=likes+comments+relationships";
+                + mCallbackUrl + "&response_type=code&display=touch&scope=public_content+follower_list+likes+comments+relationships";
 
         InstagramWebViewController.OAuthDialogListener listener = new InstagramWebViewController.OAuthDialogListener() {
             @Override

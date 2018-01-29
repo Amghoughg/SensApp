@@ -1,5 +1,12 @@
 <resources>
 
+    <!-- TWITTER -->
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">5jZS19ffLeQWMQGNoeltOid1o</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">pqgysx4g3kpH7SxWQffF9cVFNmrymSBLgUb89Rt7JD6D8oE0EP</string>
+    <string name="retweet_perc_label">of your tweets have been retweeted</string>
+    <string name="retweet_dist_chart_title">Retweet distribution:</string>
+    <string name="retweet_dist_chart_yaxis"># of retweets</string>
+
     <string name="tags_stats_title">most used tags in the last</string>
     <string name="tags_stats_title_2">posts</string>
     <string name="types_stats_title">Types of content shared in the last</string>
