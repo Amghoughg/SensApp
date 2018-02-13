@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".setup.SetupActivity">
+    tools:context=".setup.SocialLoginActivity">
 
     <ImageView
         android:id="@+id/img"
@@ -80,12 +80,51 @@
 
     </android.support.v7.widget.CardView>
 
+    <Button
+        android:id="@+id/finish_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/light_green"
+        android:text="@string/finish"
+        android:textColor="@color/white"
+        android:onClick="onFinishClicked"
+        android:layout_alignStart="@id/twitter_login_button"
+        android:layout_alignEnd="@id/twitter_login_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"/>
+
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
-        android:id="@+id/login_button"
+        android:id="@+id/twitter_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/finish_button"
+        android:layout_marginBottom="30dp"/>
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/fb_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:visibility="invisible"
+        android:layout_above="@id/finish_button"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/fb_login_custom_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#3b5998"
+        android:text="@string/login_fb"
+        android:textColor="@android:color/white"
+        android:onClick="onFbLoginClicked"
+        android:layout_alignStart="@id/twitter_login_button"
+        android:layout_alignEnd="@id/twitter_login_button"
+        android:layout_above="@id/twitter_login_button"
+        android:layout_marginBottom="10dp"/>
+
+
 
 </RelativeLayout>

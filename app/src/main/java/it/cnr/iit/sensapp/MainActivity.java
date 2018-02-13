@@ -1,7 +1,10 @@
 package it.cnr.iit.sensapp;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,9 +15,6 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.daasuu.cat.CountAnimationTextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -22,9 +22,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterApiClient;
-import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -38,18 +36,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import it.cnr.iit.sensapp.askcontroller.ForegroundService;
+import it.cnr.iit.sensapp.controllers.FacebookController;
 import it.cnr.iit.sensapp.controllers.MyTwitterApiClient;
 import it.cnr.iit.sensapp.controllers.MyTwitterCustomInterface;
 import it.cnr.iit.sensapp.controllers.TwitterController;
 import it.cnr.iit.sensapp.controllers.UIController;
+import it.cnr.iit.sensapp.model.Post;
 import it.cnr.iit.sensapp.utils.ChartData;
 import it.cnr.iit.sensapp.utils.CircleTransformation;
 import retrofit2.Call;
 
-public class MainTwitter extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,
+        FacebookController.FacebookListener, TwitterController.LastTweetsListener{
 
     private User twitterUser;
-    private AVLoadingIndicatorView generalAvi, tagsAvi, retweetsAvi;
+    private AVLoadingIndicatorView generalAvi, tagsAvi, retweetsAvi, retweetersAvi;
     private List<User> retweeters = new ArrayList<>();
     private MostRetweetersAdapter adapter;
     private List<Long> tweetsWithRetweets = new ArrayList<>();
@@ -57,21 +59,75 @@ public class MainTwitter extends AppCompatActivity {
     private int downloadedListOfRetweeters = 0;
     private int retweetersCounter = 0;
     private int retweetersDownloaderCount =0;
+    private NestedScrollView scrollView;
+    private SwipeRefreshLayout refreshLayout;
+
+
+
+
+
+
+    private FacebookController facebookController = new FacebookController();
+    private TwitterController twitterController = new TwitterController();
+
+    private List<Post> fbPosts, twitterPosts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.twitter_main);
+        setContentView(R.layout.main_activity);
 
         generalAvi = findViewById(R.id.general_info_avi);
         tagsAvi = findViewById(R.id.tags_avi);
         retweetsAvi = findViewById(R.id.retweets_avi);
+        retweetersAvi = findViewById(R.id.retweeters_avi);
+        scrollView = findViewById(R.id.scrollView);
+        refreshLayout = findViewById(R.id.swiperefresh);
+        refreshLayout.setOnRefreshListener(this);
 
         generalAvi.show();
         tagsAvi.show();
         retweetsAvi.show();
+        retweetersAvi.show();
 
         fillUserInfo();
+        startService();
+
+        facebookController.downloadLastFacebookPosts(this);
+        twitterController.downloadLastTweets();
+    }
+
+    @Override
+    public void onRefresh() {
+
+        retweeters = new ArrayList<>();
+        tweetsWithRetweets = new ArrayList<>();
+        retweetersIds = new ArrayList<>();
+        downloadedListOfRetweeters = 0;
+        retweetersCounter = 0;
+        retweetersDownloaderCount = 0;
+
+        findViewById(R.id.general_info_container).setVisibility(View.INVISIBLE);
+        findViewById(R.id.tags_container).setVisibility(View.INVISIBLE);
+        findViewById(R.id.retweets_container).setVisibility(View.INVISIBLE);
+        findViewById(R.id.retweeters_container).setVisibility(View.INVISIBLE);
+
+        generalAvi.show();
+        tagsAvi.show();
+        retweetsAvi.show();
+        retweetersAvi.show();
+
+        fillUserInfo();
+        startService();
+
+        scrollView.scrollTo(0, 0);
+        scrollView.fullScroll(View.FOCUS_UP);
+        scrollView.fullScroll(NestedScrollView.FOCUS_UP);
+    }
+
+    private void startService(){
+        Intent startIntent = new Intent(MainActivity.this, ForegroundService.class);
+        startService(startIntent);
     }
 
     private void fillUserInfo(){
@@ -85,7 +141,7 @@ public class MainTwitter extends AppCompatActivity {
 
                 twitterUser = userResult.data;
 
-                Picasso.with(MainTwitter.this)
+                Picasso.with(MainActivity.this)
                         .load(twitterUser.profileImageUrl.replace("_normal", ""))
                         .transform(new CircleTransformation())
                         .into((ImageView) findViewById(R.id.profile_image));
@@ -124,7 +180,7 @@ public class MainTwitter extends AppCompatActivity {
         StatusesService statusesService = twitterApiClient.getStatusesService();
 
         Call<List<Tweet>> tweetsCall = statusesService.userTimeline(twitterUser.id, null,
-                200, null, null, null, false,
+                3200, null, null, null, false,
                 true, true);
 
         tweetsCall.enqueue(new Callback<List<Tweet>>() {
@@ -142,6 +198,9 @@ public class MainTwitter extends AppCompatActivity {
         });
     }
 
+    //==============================================================================================
+    // MOST USED TAGS
+    //==============================================================================================
     private void showMostUsedTags(List<Tweet> tweets){
 
         PieChart chart = findViewById(R.id.tags_chart);
@@ -155,7 +214,7 @@ public class MainTwitter extends AppCompatActivity {
                 tags, 5, true);
 
         UIController.createPieChart(chart, this, Legend.LegendOrientation.VERTICAL,
-                Legend.LegendVerticalAlignment.CENTER, Legend.LegendHorizontalAlignment.LEFT,
+                Legend.LegendVerticalAlignment.TOP, Legend.LegendHorizontalAlignment.LEFT,
                 tagsFrequency,Color.parseColor("#DD6E42"),
                 Color.parseColor("#4E598C"), Color.parseColor("#FF5964"),
                 Color.parseColor("#99D5C9"), Color.parseColor("#35A7FF"));
@@ -164,6 +223,9 @@ public class MainTwitter extends AppCompatActivity {
         findViewById(R.id.tags_container).setVisibility(View.VISIBLE);
     }
 
+    //==============================================================================================
+    // RETWEETS STATS
+    //==============================================================================================
     private void showRetweetStats(List<Tweet> tweets){
 
         TwitterController.RetweetStats stats = TwitterController.getReteetStats(tweets);
@@ -182,6 +244,9 @@ public class MainTwitter extends AppCompatActivity {
         retweetsAvi.hide();
     }
 
+    //==============================================================================================
+    // RETWEETERS
+    //==============================================================================================
     private void downloadRetweeters(){
 
         TwitterSession activeSession = TwitterCore.getInstance()
@@ -201,7 +266,8 @@ public class MainTwitter extends AppCompatActivity {
 
                 @Override
                 public void failure(TwitterException exception) {
-                    Log.e("MainTwitter", ""+exception);
+                    Log.e("MainActivity", ""+exception);
+                    refreshLayout.setRefreshing(false);
                 }
             });
         }
@@ -236,7 +302,8 @@ public class MainTwitter extends AppCompatActivity {
 
                     @Override
                     public void failure(TwitterException exception) {
-                        Log.e("MainTwitter", ""+exception);
+                        Log.e("MainActivity", ""+exception);
+                        refreshLayout.setRefreshing(false);
                     }
                 });
 
@@ -264,7 +331,25 @@ public class MainTwitter extends AppCompatActivity {
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+        findViewById(R.id.retweeters_container).setVisibility(View.VISIBLE);
+        retweetersAvi.hide();
+        refreshLayout.setRefreshing(false);
     }
 
 
+    //==============================================================================================
+    // FACEBOOK
+    //==============================================================================================
+    @Override
+    public void onLastPostsDownloaded(List<Post> posts) {
+        this.fbPosts = posts;
+    }
+
+    //==============================================================================================
+    // TWITTER
+    //==============================================================================================
+    @Override
+    public void onDownload(List<Post> posts) {
+        this.twitterPosts = posts;
+    }
 }

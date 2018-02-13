@@ -1,8 +1,16 @@
 package it.cnr.iit.sensapp.setup;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.util.Base64;
+import android.util.Log;
 
 import com.dd.morphingbutton.MorphingButton;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import it.cnr.iit.sensapp.R;
 
@@ -89,5 +97,24 @@ public class Utils {
                 .colorPressed(context.getResources().getColor(R.color.dark_green))
                 .icon(R.drawable.ic_action_done);
         btnMorph.morph(circle);
+    }
+
+    public static void printKeyHash(Context context){
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(),
+                    PackageManager.GET_SIGNATURES);
+
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            Log.d("KeyHash:", "Error: " + e.getMessage());
+        }
+        catch (NoSuchAlgorithmException e) {
+            Log.d("KeyHash:", "Error: " + e.getMessage());
+        }
     }
 }

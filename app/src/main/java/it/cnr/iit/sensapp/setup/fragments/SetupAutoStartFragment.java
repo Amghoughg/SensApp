@@ -1,5 +1,6 @@
 package it.cnr.iit.sensapp.setup.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -51,7 +52,11 @@ public class SetupAutoStartFragment extends Fragment {
                         }
                     }, BUTTON_ANIM_DURATION);
                 }else{
-                        //((SetupActivity)getActivity()).onSetupComplete();
+                    Intent intent = new Intent(getContext(),
+                            ((SetupActivity)getActivity()).socialLoginClass);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });

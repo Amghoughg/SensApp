@@ -14,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.dd.morphingbutton.MorphingButton;
 
 import it.cnr.iit.sensapp.R;
+import it.cnr.iit.sensapp.setup.fragments.SetupAppStatisticsFragment;
+import it.cnr.iit.sensapp.setup.fragments.SetupAutoStartFragment;
 import it.cnr.iit.sensapp.setup.fragments.SetupPermissionsFragment;
 import it.cnr.iit.sensapp.setup.fragments.SetupPowerFragment;
 import it.cnr.iit.sensapp.setup.fragments.SetupPrivacyFragment;
@@ -23,9 +25,11 @@ public class SetupActivity extends AppCompatActivity {
 
     public static final int REQ_IGNORE_BATTERY_OPT = 1;
 
-    private Fragment[] fragments = new Fragment[2];
+    private Fragment[] fragments = new Fragment[5];
 
     private CustomViewPager mPager;
+
+    public static Class<?> socialLoginClass = SocialLoginActivity.class;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +37,15 @@ public class SetupActivity extends AppCompatActivity {
 
         setContentView(R.layout.setup_activity);
 
+        Utils.printKeyHash(this);
+
         fragments[0] = new SetupTermsFragment();
         fragments[1] = new SetupPrivacyFragment();
-        //fragments[2] = new SetupPermissionsFragment();
+        fragments[2] = new SetupPermissionsFragment();
         //fragments[3] = new SetupPowerFragment();
-        //fragments[4] = new SetupAppStatisticsFragment();
+        fragments[3] = new SetupAppStatisticsFragment();
         //fragments[5] = new SetupInstagramFragment();
-        //fragments[6] = new SetupAutoStartFragment();
+        fragments[4] = new SetupAutoStartFragment();
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = findViewById(R.id.pager);

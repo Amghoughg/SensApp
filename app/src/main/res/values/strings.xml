@@ -7,9 +7,15 @@
     <string name="retweet_dist_chart_title">Retweet distribution:</string>
     <string name="retweet_dist_chart_yaxis"># of retweets</string>
 
-    <string name="tags_stats_title">most used tags in the last</string>
-    <string name="tags_stats_title_2">posts</string>
-    <string name="types_stats_title">Types of content shared in the last</string>
+
+    <!-- FACEBOOK -->
+    <string name="facebook_app_id">2114457778790375</string>
+    <string name="fb_login_protocol_scheme">fb2114457778790375</string>
+    <string name="login_fb">Login with Facebook</string>
+
+    <string name="tags_stats_title">Most recently used tags</string>
+    <string name="retweet_stats_title">Recent Retweets Stats</string>
+    <string name="best_retweeters">Best Retweeters</string>
 
     <!-- SETUP -->
     <string name="app_stats_title">APPS USAGE STATISTICS</string>
@@ -49,7 +55,7 @@
     <string name="history">History</string>
     <string name="ask_conf">
         {
-            "logPath" : "ContextLabeler",
+            "logPath" : "SenseAppLogs",
             "probes" : [
                 {
                     "name" : "WeatherProbe",
@@ -72,15 +78,6 @@
                     "name" : "BatteryProbe",
                     "interval" : 60,
                     "logFile" : "battery.csv"
-                },
-                {
-                    "name" : "BluetoothConnProbe",
-                    "logFile" : "bt_conn.csv"
-                },
-                {
-                    "name" : "BluetoothScanProbe",
-                    "interval" : 60,
-                    "logFile" : "bt_scan.csv"
                 },
                 {
                     "name" : "CallsProbe",
@@ -135,17 +132,6 @@
                     "name" : "AppsUsageProbe",
                     "interval" : 180,
                     "logFile" : "apps_usage.csv"
-                },
-                {
-                    "name" : "WiFiProbe",
-                    "interval" : 180,
-                    "logFile" : "wifi_scans.csv"
-                },
-                {
-                    "name" : "WiFiP2PProbe",
-                    "interval" : 120,
-                    "startDelay" : 120,
-                    "logFile" : "wifi_p2p_scans.csv"
                 },
                 {
                     "name" : "SmsProbe",

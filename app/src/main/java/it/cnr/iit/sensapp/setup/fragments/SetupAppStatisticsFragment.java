@@ -54,7 +54,15 @@ public class SetupAppStatisticsFragment extends Fragment {
                     }, BUTTON_ANIM_DURATION);
 
                 }else{
-                    ((SetupActivity)getActivity()).nextFragment(1);
+                    if(AutoStartController.requestIsNeeded())
+                        ((SetupActivity)getActivity()).nextFragment(1);
+                    else{
+                        Intent intent = new Intent(getContext(),
+                                ((SetupActivity)getActivity()).socialLoginClass);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
                 }
             }
         });
@@ -69,10 +77,6 @@ public class SetupAppStatisticsFragment extends Fragment {
             Utils.morphToSquare(getActivity(), grantButton, BUTTON_ANIM_DURATION,
                     getContext().getResources().getString(R.string.grant_permissions));
         }
-    }
-
-    public MorphingButton getGrantButton(){
-        return this.grantButton;
     }
 
     private void openSettingsActivity(){

@@ -32,7 +32,6 @@ import it.cnr.iit.sensapp.utils.ChartData;
 /**
  * Created by mattia on 27.01.18.
  */
-
 public class UIController {
 
     public static void createPieChart(PieChart chart, Context context,
@@ -47,7 +46,7 @@ public class UIController {
         chart.setTransparentCircleAlpha(110);
         chart.setRotationEnabled(false);
 
-        chart.setExtraOffsets(50,-0,-0,-0);
+        chart.setExtraOffsets(50,0,0,0);
 
         chart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         chart.getDescription().setEnabled(false);
@@ -56,16 +55,16 @@ public class UIController {
         chart.setHoleRadius(40f);
 
         Legend l = chart.getLegend();
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(legendOrientation);
+        l.setVerticalAlignment(legendVerticalAlignment);
+        l.setHorizontalAlignment(legendHorizontalAlignment);
         l.setStackSpace(100f);
         l.setDrawInside(false);
         l.setXEntrySpace(7f);
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
         l.setTypeface(ResourcesCompat.getFont(context, R.font.myfont));
-        l.setTextSize(15f);
+        l.setTextSize(12f);
 
         chart.offsetLeftAndRight(5);
 
@@ -91,7 +90,7 @@ public class UIController {
     public static void createBarChart(BarChart chart, Context context, List<Integer> frequencyData){
 
         chart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-        chart.getDescription().setEnabled(false);
+        //chart.getDescription().setEnabled(false);
 
         Legend l = chart.getLegend();
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
