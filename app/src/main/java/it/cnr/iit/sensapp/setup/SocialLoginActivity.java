@@ -36,16 +36,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.List;
 
 import it.cnr.iit.sensapp.MainActivity;
 import it.cnr.iit.sensapp.PreferencesController;
 import it.cnr.iit.sensapp.R;
+import it.cnr.iit.sensapp.controllers.FacebookController;
+import it.cnr.iit.sensapp.model.Post;
 import it.cnr.iit.sensapp.utils.CircleTransformation;
 import it.matbell.ask.logs.FileLogger;
 import it.matbell.ask.model.Loggable;
 import retrofit2.Call;
 
-public class SocialLoginActivity extends AppCompatActivity {
+public class SocialLoginActivity extends AppCompatActivity
+        implements FacebookController.FacebookListener {
 
     private static final String TAG = "SocialLogin";
 
@@ -53,7 +57,7 @@ public class SocialLoginActivity extends AppCompatActivity {
     private AVLoadingIndicatorView avi;
 
     private TwitterLoginInfo twitterLoginInfo;
-    private FacebookLoginInfo facebookLoginInfo;
+    private FacebookController.FacebookLoginInfo facebookLoginInfo;
 
     private boolean fblogin = false;
 
@@ -209,7 +213,7 @@ public class SocialLoginActivity extends AppCompatActivity {
         @Override
         public void onSuccess(LoginResult loginResult) {
             Log.d(TAG, "FB Login success.");
-            downloadFacebookUserInfo(loginResult.getAccessToken());
+            new FacebookController().downloadFacebookUserInfo(SocialLoginActivity.this);
         }
 
         @Override
@@ -223,57 +227,17 @@ public class SocialLoginActivity extends AppCompatActivity {
         }
     };
 
-    private void downloadFacebookUserInfo(final AccessToken accessToken){
-        GraphRequest request = GraphRequest.newMeRequest(
-                accessToken,
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        try {
-                            facebookLoginInfo = new FacebookLoginInfo();
+    @Override
+    public void onLastPostsDownloaded(List<Post> posts) {}
 
-                            facebookLoginInfo.firstName = object.getString("first_name");
-                            facebookLoginInfo.lastName = object.getString("last_name");
-                            facebookLoginInfo.email = object.getString("email");
-                            facebookLoginInfo.userId = object.getString("id");
-                            facebookLoginInfo.accessToken = accessToken.getToken();
+    @Override
+    public void onFacebookLoginInfo(FacebookController.FacebookLoginInfo loginInfo) {
 
-                            Log.d(TAG, "FB TOKEN: "+facebookLoginInfo.accessToken);
+        this.facebookLoginInfo = loginInfo;
 
-                            FileLogger logger = FileLogger.getInstance();
-                            logger.setBaseDir("SenseAppLogs");
-                            logger.store("facebook_account.csv", facebookLoginInfo,
-                                    false);
+        fillViews(loginInfo.profilePicture, loginInfo.fullName);
 
-                            fillViews(object.getJSONObject("picture").getJSONObject("data")
-                                    .getString("url"), object.getString("name"));
-
-                            fblogin = false;
-
-                        } catch (JSONException e) {
-                            facebookLoginInfo = null;
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("fields","first_name,last_name,picture.type(large),birthday,gender," +
-                "email,name");
-        request.setParameters(parameters);
-        request.executeAsync();
-    }
-
-    private class FacebookLoginInfo implements Loggable{
-
-        String userId, firstName, lastName, email;
-        String accessToken;
-
-        @Override
-        public String getDataToLog() {
-            return userId + FileLogger.SEP + firstName + FileLogger.SEP + lastName + FileLogger.SEP
-                    + email + FileLogger.SEP + accessToken;
-        }
+        fblogin = false;
     }
 
     //==============================================================================================
@@ -297,8 +261,11 @@ public class SocialLoginActivity extends AppCompatActivity {
                     })
                     .build();
 
-        }else
+        }else {
+            PreferencesController.storeSocialLogin(this, facebookLoginInfo != null,
+                    twitterLoginInfo.userId);
             onSetupComplete();
+        }
     }
 
     public void onSetupComplete(){

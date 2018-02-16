@@ -53,6 +53,31 @@
                     android:layout_height="wrap_content">
 
                     <com.daasuu.cat.CountAnimationTextView
+                        android:id="@+id/friends_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:text="0"
+                        android:textSize="30sp"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friends"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="15sp"
+                        android:layout_below="@id/friends_counter"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <com.daasuu.cat.CountAnimationTextView
                         android:id="@+id/pins_counter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -13,6 +13,7 @@
     <string name="fb_login_protocol_scheme">fb2114457778790375</string>
     <string name="login_fb">Login with Facebook</string>
 
+    <string name="social_activity_title">Last month activity</string>
     <string name="tags_stats_title">Most recently used tags</string>
     <string name="retweet_stats_title">Recent Retweets Stats</string>
     <string name="best_retweeters">Best Retweeters</string>

@@ -17,26 +17,8 @@ public class PreferencesController {
     private static final String PREFS = "contextLabeler";
     public static final String PREF_SETUP_COMPLETE = "setupComplete";
 
-    public static final String PREFS_INSTAGRAM_TOKEN = "InstagramToken";
-    public static final String PREFS_INSTAGRAM_USER= "InstagramUser";
-
-    public static void storeInstagramProfile(Context context, User user, String token){
-        SharedPreferences.Editor editor = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit();
-        editor.putString(PREFS_INSTAGRAM_USER, new Gson().toJson(user)).apply();
-        editor.putString(PREFS_INSTAGRAM_TOKEN, token).apply();
-    }
-
-    public static String getInstagramToken(Context context){
-        return context.getSharedPreferences(PREFS,Context.MODE_PRIVATE).getString(
-                PREFS_INSTAGRAM_TOKEN, null);
-    }
-
-    public static User getInstagramUser(Context context){
-
-        String json = context.getSharedPreferences(PREFS,Context.MODE_PRIVATE).getString(
-                PREFS_INSTAGRAM_USER, null);
-        return json == null ? null : new Gson().fromJson(json, User.class);
-    }
+    public static final String PREF_FB = "fb";
+    public static final String PREF_TW = "tw";
 
     public static boolean isSetupComplete(Context context){
         return context.getSharedPreferences(PREFS,Context.MODE_PRIVATE).getBoolean(
@@ -46,5 +28,22 @@ public class PreferencesController {
     public static void storeSetupComplete(Context context){
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(
                 PREF_SETUP_COMPLETE, true).apply();
+    }
+
+    public static void storeSocialLogin(Context context, boolean fb, long tw){
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(
+                PREF_FB, fb).apply();
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putLong(
+                PREF_TW, tw).apply();
+    }
+
+    public static boolean isFbLogged(Context context){
+        return context.getSharedPreferences(PREFS,Context.MODE_PRIVATE).getBoolean(
+                PREF_FB, false);
+    }
+
+    public static long isTwitterLogged(Context context){
+        return context.getSharedPreferences(PREFS,Context.MODE_PRIVATE).getLong(
+                PREF_TW, -1);
     }
 }

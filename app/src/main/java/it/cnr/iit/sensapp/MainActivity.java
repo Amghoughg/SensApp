@@ -33,8 +33,11 @@ import com.twitter.sdk.android.core.services.StatusesService;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import it.cnr.iit.sensapp.askcontroller.ForegroundService;
 import it.cnr.iit.sensapp.controllers.FacebookController;
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         FacebookController.FacebookListener, TwitterController.LastTweetsListener{
 
     private User twitterUser;
-    private AVLoadingIndicatorView generalAvi, tagsAvi, retweetsAvi, retweetersAvi;
+    private AVLoadingIndicatorView generalAvi, tagsAvi, retweetsAvi, retweetersAvi, socialActivityAvi;
     private List<User> retweeters = new ArrayList<>();
     private MostRetweetersAdapter adapter;
     private List<Long> tweetsWithRetweets = new ArrayList<>();
@@ -63,14 +66,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private SwipeRefreshLayout refreshLayout;
 
 
-
-
-
-
     private FacebookController facebookController = new FacebookController();
     private TwitterController twitterController = new TwitterController();
 
     private List<Post> fbPosts, twitterPosts;
+    private long twitterId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         tagsAvi = findViewById(R.id.tags_avi);
         retweetsAvi = findViewById(R.id.retweets_avi);
         retweetersAvi = findViewById(R.id.retweeters_avi);
+        socialActivityAvi = findViewById(R.id.social_activity_avi);
         scrollView = findViewById(R.id.scrollView);
         refreshLayout = findViewById(R.id.swiperefresh);
         refreshLayout.setOnRefreshListener(this);
@@ -90,17 +91,25 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         retweetsAvi.show();
         retweetersAvi.show();
 
-        fillUserInfo();
-        startService();
+        //fillUserInfo();
+        //startService();
 
-        facebookController.downloadLastFacebookPosts(this);
-        twitterController.downloadLastTweets();
+        if(PreferencesController.isFbLogged(this)) {
+            facebookController.downloadFacebookUserInfo(this);
+            facebookController.downloadLastFacebookPosts(this);
+        }
+
+        twitterId = PreferencesController.isTwitterLogged(this);
+        if(twitterId != -1) {
+            downloadTwitterGeneralInfo();
+            twitterController.downloadLastTweets(twitterId, this);
+        }
     }
 
     @Override
     public void onRefresh() {
 
-        retweeters = new ArrayList<>();
+        /*retweeters = new ArrayList<>();
         tweetsWithRetweets = new ArrayList<>();
         retweetersIds = new ArrayList<>();
         downloadedListOfRetweeters = 0;
@@ -122,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         scrollView.scrollTo(0, 0);
         scrollView.fullScroll(View.FOCUS_UP);
-        scrollView.fullScroll(NestedScrollView.FOCUS_UP);
+        scrollView.fullScroll(NestedScrollView.FOCUS_UP);*/
     }
 
     private void startService(){
@@ -130,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         startService(startIntent);
     }
 
-    private void fillUserInfo(){
+    private void downloadTwitterGeneralInfo(){
 
         final Call<User> userCall = TwitterCore.getInstance().getApiClient().getAccountService()
                 .verifyCredentials(false, false, false);
@@ -196,6 +205,33 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 Log.d("TwitterKit", "Verify Credentials Failure", exc);
             }
         });
+    }
+
+    //==============================================================================================
+    // SOCIAL ACTIVITY
+    //==============================================================================================
+    private void showSocialActivity(){
+
+        if(PreferencesController.isFbLogged(this) && twitterId != -1
+                && (fbPosts == null || twitterPosts == null)) return;
+
+        if(fbPosts == null) fbPosts = new ArrayList<>();
+        if(twitterPosts == null) twitterPosts = new ArrayList<>();
+
+        PieChart chart = findViewById(R.id.social_activity_chart);
+
+        List<ChartData.FrequencyData> frequency = new ArrayList<>();
+        frequency.add(new ChartData.FrequencyData("Facebook", fbPosts.size(), false));
+        frequency.add(new ChartData.FrequencyData("Twitter", twitterPosts.size(), false));
+
+
+        UIController.createPieChart(chart, this, Legend.LegendOrientation.VERTICAL,
+                Legend.LegendVerticalAlignment.TOP, Legend.LegendHorizontalAlignment.LEFT,
+                frequency, Color.parseColor("#4E598C"),
+                Color.parseColor("#99D5C9"));
+
+        socialActivityAvi.hide();
+        findViewById(R.id.social_activity_container).setVisibility(View.VISIBLE);
     }
 
     //==============================================================================================
@@ -343,6 +379,22 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onLastPostsDownloaded(List<Post> posts) {
         this.fbPosts = posts;
+        showSocialActivity();
+    }
+
+    @Override
+    public void onFacebookLoginInfo(FacebookController.FacebookLoginInfo loginInfo) {
+        generalAvi.hide();
+        findViewById(R.id.general_info_container).setVisibility(View.VISIBLE);
+
+        ((CountAnimationTextView) findViewById(R.id.friends_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, loginInfo.friends);
+
+        Picasso.with(MainActivity.this)
+                .load(loginInfo.profilePicture)
+                .transform(new CircleTransformation())
+                .into((ImageView) findViewById(R.id.profile_image));
     }
 
     //==============================================================================================
@@ -351,5 +403,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onDownload(List<Post> posts) {
         this.twitterPosts = posts;
+        showSocialActivity();
     }
 }

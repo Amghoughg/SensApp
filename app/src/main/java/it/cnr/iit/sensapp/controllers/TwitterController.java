@@ -54,9 +54,10 @@ public class TwitterController {
 
                     Date tweetDate = getTwitterDate(tweet.createdAt);
 
-                    if(tweetDate != null && !tweetDate.before(monthAgo)){
+                    if(!tweetDate.before(monthAgo)){
                         recentTweets.add(new Post(tweet));
-                    }
+                    }else
+                        break;
                 }
 
                 listener.onDownload(recentTweets);
