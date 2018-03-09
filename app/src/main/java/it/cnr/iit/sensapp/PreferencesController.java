@@ -1,16 +1,6 @@
 package it.cnr.iit.sensapp;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import it.mcampana.instadroid.model.User;
 
 public class PreferencesController {
 

@@ -3,7 +3,7 @@
     <!-- TWITTER -->
     <string name="com.twitter.sdk.android.CONSUMER_KEY">5jZS19ffLeQWMQGNoeltOid1o</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">pqgysx4g3kpH7SxWQffF9cVFNmrymSBLgUb89Rt7JD6D8oE0EP</string>
-    <string name="retweet_perc_label">of your tweets have been retweeted</string>
+    <string name="retweet_perc_label">Retweet ratio</string>
     <string name="retweet_dist_chart_title">Retweet distribution:</string>
     <string name="retweet_dist_chart_yaxis"># of retweets</string>
 
@@ -12,6 +12,20 @@
     <string name="facebook_app_id">2114457778790375</string>
     <string name="fb_login_protocol_scheme">fb2114457778790375</string>
     <string name="login_fb">Login with Facebook</string>
+    <string name="fb_stats">Recent Facebook Stats</string>
+    <string name="fb_activities">Recent Facebook Activities</string>
+    <string name="fb_photos">Last Month Photos</string>
+    <string name="fb_videos">Last Month Videos</string>
+    <string name="fb_places_title">Most Recent Tagged Places</string>
+    <string name="fb_fitness_title">Shared Fitness Activities</string>
+    <string name="fb_event_title">Most Recent Event</string>
+    <string name="fb_pages_title">Pages liked during the last month</string>
+    <string name="fb_likes_ratio">Likes ratio</string>
+    <string name="fb_share_ratio">Share ratio</string>
+    <string name="fb_likes_chart_title">Likes distribution:</string>
+    <string name="fb_shares_chart_title">Share distribution:</string>
+    <string name="fb_likes_chart_yaxis"># of likes</string>
+    <string name="fb_share_chart_yaxis"># of shares</string>
 
     <string name="social_activity_title">Last month activity</string>
     <string name="tags_stats_title">Most recently used tags</string>
@@ -21,21 +35,27 @@
     <!-- SETUP -->
     <string name="app_stats_title">APPS USAGE STATISTICS</string>
     <string name="app_stats_description">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel efficitur turpis.
-        Praesent vulputate, erat sed facilisis vulputate, diam arcu bibendum mauris, eget porta
-        sapien arcu ac dolor.
+        The application needs to read your apps usage statistics. Please, tap on the button to open
+        the Settings page and give access to the requested permission.
     </string>
     <string name="permission_title">PERMISSIONS</string>
     <string name="permission_description">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel efficitur turpis.
-        Praesent vulputate, erat sed facilisis vulputate, diam arcu bibendum mauris, eget porta
-        sapien arcu ac dolor.
+        The application needs to access different information to model your situations.
+        Please, give access to the requested permissions.
+    </string>
+    <string name="autostart_title">AUTOSTART</string>
+    <string name="autostart_description">
+        Some manufacturers (e.g., Huawei and Xiaomi) use additional security features that could
+        affect the execution of background tasks. Please, tap on the button below to open the
+        Settings page and give access to the requested permission.
     </string>
 
 
     <string name="instagram_login_title">Online Social Network Log-in</string>
-    <string name="instagram_login_description">Please, perform the Instagram log-in to allow
-    the application to calculate several statistics about your social network, your audience and usage.</string>
+    <string name="instagram_login_description">
+        Please, perform the Facebook and/or Twitter log-in to allow the application to access your
+        Social Network\'s information and model your social context.
+    </string>
 
     <string name="instagram_login">Log-in with Instagram</string>
     <string name="accept">Accept</string>
@@ -45,19 +65,21 @@
     <string name="open_settings">Open settings</string>
     <string name="finish">Finish</string>
 
-    <string name="splash_app_name1">Sense</string>
-    <string name="splash_app_name2">App</string>
+    <string name="splash_app_name1">MyDigital</string>
+    <string name="splash_app_name2">Footprint</string>
 
-    <string name="app_name">SenseApp</string>
-    <string name="activity_hint">What are you doing?</string>
-    <string name="button_start">START NEW READING</string>
-    <string name="button_stop">STOP READING</string>
-    <string name="action_text">Reading Activity:</string>
-    <string name="history">History</string>
+    <string name="app_name">MyDigitalFootprint</string>
     <string name="ask_conf">
         {
-            "logPath" : "SenseAppLogs",
+            "logPath" : "MyDigitalFootprint",
+            "remoteLoggerDest": \"http://mcampana.iit.cnr.it:5000/sensing/upload\",
+            "zipperInterval" : 1,
+            "maxLogSizeMb": 1,
             "probes" : [
+                {
+                    "name" : "MultimediaProbe",
+                    "logFile": "multimedia.csv"
+                },
                 {
                     "name" : "WeatherProbe",
                     "interval" : 3600,
@@ -116,22 +138,22 @@
                 },
                 {
                     "name" : "InstalledAppsProbe",
-                    "interval" : 60,
+                    "interval" : 3600,
                     "logFile" : "installed_apps.csv"
                 },
                 {
                     "name" : "LocationProbe",
-                    "interval" : 180,
+                    "interval" : 300,
                     "logFile" : "location.csv"
                 },
                 {
                     "name" : "RunningApplicationsProbe",
-                    "interval" : 180,
+                    "interval" : 300,
                     "logFile" : "running_apps.csv"
                 },
                 {
                     "name" : "AppsUsageProbe",
-                    "interval" : 180,
+                    "interval" : 3600,
                     "logFile" : "apps_usage.csv"
                 },
                 {

@@ -130,7 +130,7 @@ public class TwitterController {
             }
         }
 
-        if(myTweetsCount != 0) stats.retweetsPerc = (stats.retweetsPerc / myTweetsCount)*100.0f;
+        if(myTweetsCount != 0) stats.retweetsPerc = (stats.retweetsPerc / myTweetsCount);
 
         Collections.sort(stats.retweetsDistribution);
         Collections.reverse(stats.retweetsDistribution);

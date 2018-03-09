@@ -34,11 +34,25 @@
 
                 <include layout="@layout/social_activity"/>
 
+                <include layout="@layout/fb_stats"/>
+
+                <include layout="@layout/fb_actions"/>
+
+                <include layout="@layout/fb_places" />
+
+                <include layout="@layout/fb_photos"/>
+
+                <include layout="@layout/fb_videos"/>
+
+                <include layout="@layout/fb_event" />
+
+                <include layout="@layout/fb_pages" />
+
+                <include layout="@layout/fb_fitness" />
+
                 <include layout="@layout/twitter_tags_stats_card"/>
 
                 <include layout="@layout/twitter_retweets_stats_card"/>
-
-                <include layout="@layout/twitter_most_retweeters_card"/>
 
             </LinearLayout>
 

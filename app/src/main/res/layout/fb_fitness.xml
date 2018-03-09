@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:id="@+id/fb_stats_card">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/fb_chart_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/fb_fitness_title"
+            android:padding="5dp"
+            android:textColor="@color/light"
+            android:fontFamily="@font/raleway_medium"/>
+
+        <RelativeLayout
+            android:id="@+id/fb_fitness_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_below="@id/fb_chart_title">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nickname"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <com.daasuu.cat.CountAnimationTextView
+                        android:id="@+id/walk_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:text="0"
+                        android:textSize="30sp"
+                        android:layout_centerHorizontal="true"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_walk"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="15sp"
+                        android:layout_below="@id/walk_counter"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <com.daasuu.cat.CountAnimationTextView
+                        android:id="@+id/run_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:text="0"
+                        android:textSize="30sp"
+                        android:layout_centerHorizontal="true"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_run"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="15sp"
+                        android:layout_below="@id/run_counter"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <com.daasuu.cat.CountAnimationTextView
+                        android:id="@+id/bike_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:text="0"
+                        android:textSize="30sp"
+                        android:layout_centerHorizontal="true"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_bike"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="15sp"
+                        android:layout_below="@id/bike_counter"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/fb_fitness_avi"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            style="@style/AVLoadingIndicatorView"
+            android:visibility="visible"
+            app:indicatorName="BallPulseIndicator"
+            android:layout_centerInParent="true"
+            app:indicatorColor="@color/colorPrimaryDark"/>
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

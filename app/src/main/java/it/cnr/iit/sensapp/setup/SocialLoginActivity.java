@@ -8,12 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.shashank.sony.fancygifdialoglib.FancyGifDialog;
@@ -31,9 +28,6 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.twitter.sdk.android.core.models.User;
 import com.wang.avi.AVLoadingIndicatorView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,8 +60,8 @@ public class SocialLoginActivity extends AppCompatActivity
     // See https://developers.facebook.com/docs/facebook-login/permissions/
     private static final String[] FB_PERMISSIONS = {"email", "public_profile", "user_friends",
             "user_birthday", "user_actions.books", "user_actions.fitness", "user_actions.music",
-            "user_actions.news", "user_actions.video", "user_likes", "user_photos",
-            "user_posts", "user_tagged_places", "user_videos", "user_events"};
+            "user_actions.video", "user_likes", "user_photos", "user_posts", "user_tagged_places",
+            "user_videos", "user_events"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,8 +166,8 @@ public class SocialLoginActivity extends AppCompatActivity
                 twitterLoginInfo.screenName = userResult.data.screenName;
 
                 FileLogger logger = FileLogger.getInstance();
-                logger.setBaseDir("SenseAppLogs");
-                logger.store("twitter_account.csv", twitterLoginInfo, false);
+                logger.setBaseDir(getResources().getString(R.string.app_name));
+                logger.store("osn_accounts.csv", twitterLoginInfo, false);
 
                 fillViews(userResult.data.profileImageUrl.replace("_normal", ""),
                         userResult.data.name);
@@ -240,6 +234,45 @@ public class SocialLoginActivity extends AppCompatActivity
         fblogin = false;
     }
 
+    @Override
+    public void onFacebookVideoInfoDownloaded(int movies, int tvShows) {}
+
+    @Override
+    public void onFacebookMusicInfoDownloaded(int music) {}
+
+    @Override
+    public void onFacebookBooksInfoDownloaded(int books) {}
+
+    @Override
+    public void onFacebookUploadedPhotos(int photos) {}
+
+    @Override
+    public void onFacebookTaggedPhotos(int photos) {}
+
+    @Override
+    public void onFacebookUploadedVideos(int videos) {}
+
+    @Override
+    public void onFacebookTaggedVideos(int videos) {}
+
+    @Override
+    public void onFacebookPlacesDownloaded(String firstPlace, String secondPlace, String thirdPlace) {}
+
+    @Override
+    public void onFacebookLastEventDownload(String url) {}
+
+    @Override
+    public void onFacebookPagesDownload(int total, String name, String url) {}
+
+    @Override
+    public void onFacebookWalkDownload(int total) {}
+
+    @Override
+    public void onFacebookRunDownload(int total) {}
+
+    @Override
+    public void onFacebookBikeDownload(int total) {}
+
     //==============================================================================================
     // Setup complete
     //==============================================================================================
@@ -263,7 +296,7 @@ public class SocialLoginActivity extends AppCompatActivity
 
         }else {
             PreferencesController.storeSocialLogin(this, facebookLoginInfo != null,
-                    twitterLoginInfo.userId);
+                    (twitterLoginInfo != null) ? twitterLoginInfo.userId : -1);
             onSetupComplete();
         }
     }

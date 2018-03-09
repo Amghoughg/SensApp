@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/img"
         android:layout_margin="10dp"
-        android:text="@string/permission_title"
+        android:text="@string/autostart_title"
         android:textStyle="bold"/>
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="@string/permission_description"
+        android:text="@string/autostart_description"
         android:layout_below="@id/title"
         android:textAlignment="center"/>
 

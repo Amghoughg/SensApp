@@ -41,11 +41,12 @@ public class ForegroundService extends Service {
 
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
-        Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("SenseApp")
-                .setTicker("SenseApp")
-                .setContentText("Sensing on")
-                .setSmallIcon(R.mipmap.ic_launcher)
+        Notification notification = new NotificationCompat.Builder(this,
+                getString(R.string.app_name))
+                .setContentTitle(getString(R.string.app_name))
+                .setTicker(getString(R.string.app_name))
+                .setContentText("Sensing is on")
+                .setSmallIcon(R.mipmap.ic_foot)
                 .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128,
                         false))
                 .setContentIntent(pendingIntent)

@@ -24,6 +24,7 @@ public class Post {
     public Location location;
     public List<User> likes = new ArrayList<>();
     public List<Comment> comments = new ArrayList<>();
+    public int shares = 0;
     public TYPE type;
 
     public Post(Tweet tweet){
@@ -96,6 +97,9 @@ public class Post {
                 if(msgTagsArray.getJSONObject(i).getString("type").equals("user"))
                     this.taggedUsers.add(new User(msgTagsArray.getJSONObject(i)));
         }
+
+        if(jsonObject.has("shares"))
+            this.shares = jsonObject.getJSONObject("shares").getInt("count");
 
         this.type = FB;
     }

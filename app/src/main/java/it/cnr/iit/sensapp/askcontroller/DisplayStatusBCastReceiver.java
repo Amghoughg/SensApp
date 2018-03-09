@@ -8,9 +8,6 @@ import android.util.Log;
 import it.cnr.iit.sensapp.R;
 import it.matbell.ask.ASK;
 
-/**
- * Created by mattia on 26/01/18.
- */
 public class DisplayStatusBCastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "DisplayBCastReceiver";

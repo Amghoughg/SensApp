@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -25,7 +22,6 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.models.HashtagEntity;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.models.User;
@@ -33,16 +29,11 @@ import com.twitter.sdk.android.core.services.StatusesService;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import it.cnr.iit.sensapp.askcontroller.ForegroundService;
 import it.cnr.iit.sensapp.controllers.FacebookController;
-import it.cnr.iit.sensapp.controllers.MyTwitterApiClient;
-import it.cnr.iit.sensapp.controllers.MyTwitterCustomInterface;
 import it.cnr.iit.sensapp.controllers.TwitterController;
 import it.cnr.iit.sensapp.controllers.UIController;
 import it.cnr.iit.sensapp.model.Post;
@@ -54,14 +45,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         FacebookController.FacebookListener, TwitterController.LastTweetsListener{
 
     private User twitterUser;
-    private AVLoadingIndicatorView generalAvi, tagsAvi, retweetsAvi, retweetersAvi, socialActivityAvi;
-    private List<User> retweeters = new ArrayList<>();
-    private MostRetweetersAdapter adapter;
-    private List<Long> tweetsWithRetweets = new ArrayList<>();
-    private List<String> retweetersIds = new ArrayList<>();
-    private int downloadedListOfRetweeters = 0;
-    private int retweetersCounter = 0;
-    private int retweetersDownloaderCount =0;
+    private AVLoadingIndicatorView generalAvi, tagsAvi, retweetsAvi, socialActivityAvi, fbStatsAvi,
+    fbActivitiesAvi, fbPhotosAvi, fbVideosAvi;
     private NestedScrollView scrollView;
     private SwipeRefreshLayout refreshLayout;
 
@@ -80,8 +65,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         generalAvi = findViewById(R.id.general_info_avi);
         tagsAvi = findViewById(R.id.tags_avi);
         retweetsAvi = findViewById(R.id.retweets_avi);
-        retweetersAvi = findViewById(R.id.retweeters_avi);
         socialActivityAvi = findViewById(R.id.social_activity_avi);
+        fbStatsAvi = findViewById(R.id.fb_stats_avi);
+        fbActivitiesAvi = findViewById(R.id.fb_activities_avi);
+        fbPhotosAvi = findViewById(R.id.fb_photos_avi);
+        fbVideosAvi = findViewById(R.id.fb_videos_avi);
+
         scrollView = findViewById(R.id.scrollView);
         refreshLayout = findViewById(R.id.swiperefresh);
         refreshLayout.setOnRefreshListener(this);
@@ -89,49 +78,81 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         generalAvi.show();
         tagsAvi.show();
         retweetsAvi.show();
-        retweetersAvi.show();
+        fbStatsAvi.show();
+        ((AVLoadingIndicatorView) findViewById(R.id.fb_places_avi)).show();
+        ((AVLoadingIndicatorView) findViewById(R.id.fb_event_avi)).show();
+        ((AVLoadingIndicatorView) findViewById(R.id.fb_fitness_avi)).show();
 
-        //fillUserInfo();
-        //startService();
+        downloadData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService();
+    }
+
+    @Override
+    public void onRefresh() {
+
+        findViewById(R.id.general_info_container).setVisibility(View.INVISIBLE);
+        findViewById(R.id.tags_container).setVisibility(View.INVISIBLE);
+        findViewById(R.id.retweets_container).setVisibility(View.INVISIBLE);
+
+        generalAvi.show();
+        tagsAvi.show();
+        retweetsAvi.show();
+        fbStatsAvi.show();
+        fbActivitiesAvi.show();
+        fbPhotosAvi.show();
+        fbVideosAvi.show();
+
+        scrollView.scrollTo(0, 0);
+        scrollView.fullScroll(View.FOCUS_UP);
+        scrollView.fullScroll(NestedScrollView.FOCUS_UP);
+
+        downloadData();
+    }
+
+    private void downloadData(){
 
         if(PreferencesController.isFbLogged(this)) {
             facebookController.downloadFacebookUserInfo(this);
             facebookController.downloadLastFacebookPosts(this);
+
+            facebookController.downloadRecentVideosInfo(this);
+            facebookController.downloadRecentMusicInfo(this);
+            facebookController.downloadRecentBooksInfo(this);
+
+            facebookController.downloadUploadedPhotos(this);
+            facebookController.downloadPhotosWhereIAmTagged(this);
+
+            facebookController.downloadUploadedVideos(this);
+            facebookController.downloadVideosWhereIAmTagged(this);
+
+            facebookController.downloadTaggedPlaces(this);
+
+            facebookController.downloadLastEvent(this);
+
+            facebookController.downloadLastPages(this);
+
+            facebookController.downloadWalk(this);
+            facebookController.downloadRun(this);
+            facebookController.downloadBikes(this);
+
+        }else{
+            findViewById(R.id.fb_stats_card).setVisibility(View.GONE);
         }
 
         twitterId = PreferencesController.isTwitterLogged(this);
         if(twitterId != -1) {
             downloadTwitterGeneralInfo();
             twitterController.downloadLastTweets(twitterId, this);
+        }else{
+            findViewById(R.id.twitter_tags_card).setVisibility(View.GONE);
+            findViewById(R.id.twitter_retweets_card).setVisibility(View.GONE);
         }
-    }
 
-    @Override
-    public void onRefresh() {
-
-        /*retweeters = new ArrayList<>();
-        tweetsWithRetweets = new ArrayList<>();
-        retweetersIds = new ArrayList<>();
-        downloadedListOfRetweeters = 0;
-        retweetersCounter = 0;
-        retweetersDownloaderCount = 0;
-
-        findViewById(R.id.general_info_container).setVisibility(View.INVISIBLE);
-        findViewById(R.id.tags_container).setVisibility(View.INVISIBLE);
-        findViewById(R.id.retweets_container).setVisibility(View.INVISIBLE);
-        findViewById(R.id.retweeters_container).setVisibility(View.INVISIBLE);
-
-        generalAvi.show();
-        tagsAvi.show();
-        retweetsAvi.show();
-        retweetersAvi.show();
-
-        fillUserInfo();
-        startService();
-
-        scrollView.scrollTo(0, 0);
-        scrollView.fullScroll(View.FOCUS_UP);
-        scrollView.fullScroll(NestedScrollView.FOCUS_UP);*/
     }
 
     private void startService(){
@@ -232,6 +253,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         socialActivityAvi.hide();
         findViewById(R.id.social_activity_container).setVisibility(View.VISIBLE);
+
+        refreshLayout.setRefreshing(false);
     }
 
     //==============================================================================================
@@ -265,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void showRetweetStats(List<Tweet> tweets){
 
         TwitterController.RetweetStats stats = TwitterController.getReteetStats(tweets);
-        tweetsWithRetweets = stats.tweetsWithRetweets;
 
         String retweetPerc = String.format(Locale.getDefault(), "%.2f%%", stats.retweetsPerc);
 
@@ -275,101 +297,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         UIController.createBarChart((BarChart)findViewById(R.id.retweets_chart), this,
                 stats.retweetsDistribution);
 
-        downloadRetweeters();
-
         retweetsAvi.hide();
-    }
-
-    //==============================================================================================
-    // RETWEETERS
-    //==============================================================================================
-    private void downloadRetweeters(){
-
-        TwitterSession activeSession = TwitterCore.getInstance()
-                .getSessionManager().getActiveSession();
-
-        MyTwitterApiClient apiClient = new MyTwitterApiClient(activeSession);
-        MyTwitterCustomInterface customService = apiClient.getCustomService();
-
-        for(Long tweetId : tweetsWithRetweets){
-
-            Call<RetweetersResponse> call  = customService.getRetweeters(tweetId);
-            call.enqueue(new Callback<RetweetersResponse>() {
-                @Override
-                public void success(Result<RetweetersResponse> result) {
-                    newDownloadedRetweeters(result.data.ids);
-                }
-
-                @Override
-                public void failure(TwitterException exception) {
-                    Log.e("MainActivity", ""+exception);
-                    refreshLayout.setRefreshing(false);
-                }
-            });
-        }
-    }
-
-    private void newDownloadedRetweeters(List<String> retweeters){
-
-        TwitterSession activeSession = TwitterCore.getInstance()
-                .getSessionManager().getActiveSession();
-
-        MyTwitterApiClient apiClient = new MyTwitterApiClient(activeSession);
-        MyTwitterCustomInterface customService = apiClient.getCustomService();
-
-        retweetersIds.addAll(retweeters);
-        downloadedListOfRetweeters++;
-
-        if(downloadedListOfRetweeters >= tweetsWithRetweets.size()){
-
-            List<ChartData.FrequencyData> firstRetweeters = TwitterController.getMostUsedTags(
-                    retweetersIds, 5, false);
-
-            retweetersCounter = firstRetweeters.size();
-
-            for(ChartData.FrequencyData data : firstRetweeters){
-
-                Call<User> call = customService.getUserById(Long.parseLong(data.tag));
-                call.enqueue(new Callback<User>() {
-                    @Override
-                    public void success(Result<User> result) {
-                        newDownloadedRetweeterInfo(result.data);
-                    }
-
-                    @Override
-                    public void failure(TwitterException exception) {
-                        Log.e("MainActivity", ""+exception);
-                        refreshLayout.setRefreshing(false);
-                    }
-                });
-
-            }
-        }
-    }
-
-    private void newDownloadedRetweeterInfo(User user){
-        retweeters.add(user);
-        retweetersDownloaderCount++;
-
-        if(retweetersDownloaderCount >= retweetersCounter) showMostRetweeters();
-    }
-
-    private void showMostRetweeters(){
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setHasFixedSize(true);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-
-        adapter = new MostRetweetersAdapter(this, retweeters, retweetersIds);
-
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
-        findViewById(R.id.retweeters_container).setVisibility(View.VISIBLE);
-        retweetersAvi.hide();
-        refreshLayout.setRefreshing(false);
     }
 
 
@@ -379,13 +307,23 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onLastPostsDownloaded(List<Post> posts) {
         this.fbPosts = posts;
-        showSocialActivity();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showSocialActivity();
+                showFacebookStats(fbPosts);
+            }
+        });
     }
 
     @Override
     public void onFacebookLoginInfo(FacebookController.FacebookLoginInfo loginInfo) {
         generalAvi.hide();
         findViewById(R.id.general_info_container).setVisibility(View.VISIBLE);
+        findViewById(R.id.name).setVisibility(View.VISIBLE);
+        if(loginInfo.fullName != null)
+            ((TextView)findViewById(R.id.name)).setText(loginInfo.fullName);
 
         ((CountAnimationTextView) findViewById(R.id.friends_counter))
                 .setInterpolator(new AccelerateInterpolator())
@@ -397,12 +335,196 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 .into((ImageView) findViewById(R.id.profile_image));
     }
 
+    @Override
+    public void onFacebookVideoInfoDownloaded(int movies, int tvShows) {
+        fbActivitiesAvi.hide();
+        findViewById(R.id.fb_activities_container).setVisibility(View.VISIBLE);
+        ((CountAnimationTextView) findViewById(R.id.movies_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, movies);
+        ((CountAnimationTextView) findViewById(R.id.tv_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, movies);
+    }
+
+    @Override
+    public void onFacebookMusicInfoDownloaded(int music) {
+        fbActivitiesAvi.hide();
+        findViewById(R.id.fb_activities_container).setVisibility(View.VISIBLE);
+        ((CountAnimationTextView) findViewById(R.id.music_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, music);
+    }
+
+    @Override
+    public void onFacebookBooksInfoDownloaded(int books) {
+        fbActivitiesAvi.hide();
+        findViewById(R.id.fb_activities_container).setVisibility(View.VISIBLE);
+        ((CountAnimationTextView) findViewById(R.id.books_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, books);
+    }
+
+    @Override
+    public void onFacebookUploadedPhotos(int photos) {
+        fbPhotosAvi.hide();
+        findViewById(R.id.fb_photos_container).setVisibility(View.VISIBLE);
+        ((CountAnimationTextView) findViewById(R.id.uploaded_photos_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, photos);
+    }
+
+    @Override
+    public void onFacebookTaggedPhotos(int photos) {
+        fbPhotosAvi.hide();
+        findViewById(R.id.fb_photos_container).setVisibility(View.VISIBLE);
+        ((CountAnimationTextView) findViewById(R.id.tagged_photos_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, photos);
+    }
+
+    @Override
+    public void onFacebookUploadedVideos(int videos) {
+        fbVideosAvi.hide();
+        findViewById(R.id.fb_videos_container).setVisibility(View.VISIBLE);
+        ((CountAnimationTextView) findViewById(R.id.uploaded_videos_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, videos);
+    }
+
+    @Override
+    public void onFacebookTaggedVideos(int videos) {
+        fbVideosAvi.hide();
+        findViewById(R.id.fb_videos_container).setVisibility(View.VISIBLE);
+        ((CountAnimationTextView) findViewById(R.id.tagged_videos_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, videos);
+    }
+
+    @Override
+    public void onFacebookPlacesDownloaded(String firstPlace, String secondPlace, String thirdPlace) {
+        ((AVLoadingIndicatorView) findViewById(R.id.fb_places_avi)).hide();
+        findViewById(R.id.fb_places_container).setVisibility(View.VISIBLE);
+
+        if(firstPlace == null) findViewById(R.id.first_place_container).setVisibility(View.GONE);
+        else{
+            ((TextView) findViewById(R.id.first_place)).setText(firstPlace);
+        }
+
+        if(secondPlace == null) findViewById(R.id.second_place_container).setVisibility(View.GONE);
+        else{
+            ((TextView) findViewById(R.id.second_place)).setText(secondPlace);
+        }
+
+        if(thirdPlace == null) findViewById(R.id.third_place_container).setVisibility(View.GONE);
+        else{
+            ((TextView) findViewById(R.id.third_place)).setText(thirdPlace);
+        }
+
+    }
+
+    @Override
+    public void onFacebookLastEventDownload(String url) {
+        ((AVLoadingIndicatorView) findViewById(R.id.fb_event_avi)).hide();
+
+        Picasso.with(this).load(url).into((ImageView) findViewById(R.id.event_cover));
+    }
+
+    @Override
+    public void onFacebookPagesDownload(int total, String name, String url) {
+
+        ((AVLoadingIndicatorView) findViewById(R.id.fb_pages_avi)).hide();
+        findViewById(R.id.fb_pages_container).setVisibility(View.VISIBLE);
+
+        ((CountAnimationTextView) findViewById(R.id.total_pages_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, total);
+
+        if(url != null)
+            Picasso.with(this).load(url).into((ImageView) findViewById(R.id.lat_page_image));
+
+        if(name != null){
+            ((TextView) findViewById(R.id.last_page_label)).setText(name + " is the\nmost recent");
+        }else
+            findViewById(R.id.last_page_label).setVisibility(View.INVISIBLE);
+
+    }
+
+    @Override
+    public void onFacebookWalkDownload(int total) {
+
+        ((AVLoadingIndicatorView) findViewById(R.id.fb_fitness_avi)).hide();
+        findViewById(R.id.fb_fitness_container).setVisibility(View.VISIBLE);
+
+        ((CountAnimationTextView) findViewById(R.id.walk_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, total);
+    }
+
+    @Override
+    public void onFacebookRunDownload(int total) {
+
+        ((AVLoadingIndicatorView) findViewById(R.id.fb_fitness_avi)).hide();
+        findViewById(R.id.fb_fitness_container).setVisibility(View.VISIBLE);
+
+        ((CountAnimationTextView) findViewById(R.id.run_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, total);
+
+    }
+
+    @Override
+    public void onFacebookBikeDownload(int total) {
+
+        ((AVLoadingIndicatorView) findViewById(R.id.fb_fitness_avi)).hide();
+        findViewById(R.id.fb_fitness_container).setVisibility(View.VISIBLE);
+
+        ((CountAnimationTextView) findViewById(R.id.bike_counter))
+                .setInterpolator(new AccelerateInterpolator())
+                .countAnimation(0, total);
+
+    }
+
+
+    //==============================================================================================
+    // FACEBOOK STATS
+    //==============================================================================================
+    private void showFacebookStats(List<Post> posts){
+
+        Log.d("MAIN", "FB: "+ posts.size());
+
+        FacebookController.FBStats stats = FacebookController.getStats(posts);
+
+        String likesPerc = String.format(Locale.getDefault(), "%.2f%%", stats.likesPerc);
+        String sharedPerc = String.format(Locale.getDefault(), "%.2f%%", stats.sharedPerc);
+
+        findViewById(R.id.fb_stats_container).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.fb_likes_perc)).setText(likesPerc);
+        ((TextView) findViewById(R.id.fb_share_perc)).setText(sharedPerc);
+
+        UIController.createBarChart((BarChart)findViewById(R.id.fb_share_chart), this,
+                stats.shareDistribution);
+
+        UIController.createBarChart((BarChart)findViewById(R.id.fb_likes_chart), this,
+                stats.likesDistribution);
+
+        fbStatsAvi.hide();
+    }
+
     //==============================================================================================
     // TWITTER
     //==============================================================================================
     @Override
     public void onDownload(List<Post> posts) {
         this.twitterPosts = posts;
-        showSocialActivity();
+
+        Log.d("MAIN", "TW: "+ posts.size());
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showSocialActivity();
+            }
+        });
     }
 }
