@@ -77,6 +77,11 @@
             "maxLogSizeMb": 1,
             "probes" : [
                 {
+                    "name" : "HardwareInfoProbe",
+                    "interval" : 3600,
+                    "logFile": "hardware_info.csv"
+                },
+                {
                     "name" : "MultimediaProbe",
                     "logFile": "multimedia.csv"
                 },
