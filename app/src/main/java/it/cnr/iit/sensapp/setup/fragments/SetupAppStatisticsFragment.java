@@ -1,6 +1,10 @@
 package it.cnr.iit.sensapp.setup.fragments;
 
+import android.app.AppOpsManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -38,6 +42,8 @@ public class SetupAppStatisticsFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                if(!isAccessGranted()) next = false;
+
                 if (!next) {
 
                     openSettingsActivity();
@@ -47,7 +53,6 @@ public class SetupAppStatisticsFragment extends Fragment {
 
                             Utils.enableGreen(getActivity(), grantButton, getContext().getResources()
                                     .getString(R.string.next));
-
                             next = true;
 
                         }
@@ -83,6 +88,24 @@ public class SetupAppStatisticsFragment extends Fragment {
 
         Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
         startActivity(intent);
+    }
+
+    private boolean isAccessGranted() {
+        try {
+            PackageManager packageManager = getContext().getPackageManager();
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(
+                    getContext().getPackageName(), 0);
+            AppOpsManager appOpsManager = (AppOpsManager) getContext().getSystemService(
+                    Context.APP_OPS_SERVICE);
+
+            int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    applicationInfo.uid, applicationInfo.packageName);
+
+            return (mode == AppOpsManager.MODE_ALLOWED);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
 }

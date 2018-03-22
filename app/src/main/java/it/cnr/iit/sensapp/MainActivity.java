@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void startService(){
         Intent startIntent = new Intent(MainActivity.this, ForegroundService.class);
-        startService(startIntent);
+        //startService(startIntent);
     }
 
     private void downloadTwitterGeneralInfo(){

@@ -6,6 +6,7 @@
     <color name="white">#FFFFFF</color>
     <color name="softGrey">#e7e7e7</color>
     <color name="lightGreen">#FF63A47F</color>
+    <color name="grey">#797979</color>
 
     <color name="dark_red">#9b2d2d</color>
     <color name="light_red">#bf4646</color>

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
@@ -113,8 +112,7 @@ public class SocialLoginActivity extends AppCompatActivity
         Picasso.with(this)
                 .load(imageUrl)
                 .transform(new CircleTransformation())
-                .into((ImageView)findViewById(R.id.profile_image),
-                        new com.squareup.picasso.Callback() {
+                .into(findViewById(R.id.profile_image), new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
                         avi.hide();
@@ -171,6 +169,10 @@ public class SocialLoginActivity extends AppCompatActivity
 
                 fillViews(userResult.data.profileImageUrl.replace("_normal", ""),
                         userResult.data.name);
+
+                twitterLoginButton.setEnabled(false);
+                twitterLoginButton.setBackgroundColor(
+                        getResources().getColor(R.color.grey, getTheme()));
             }
 
             @Override
@@ -232,6 +234,10 @@ public class SocialLoginActivity extends AppCompatActivity
         fillViews(loginInfo.profilePicture, loginInfo.fullName);
 
         fblogin = false;
+
+        findViewById(R.id.fb_login_custom_button).setEnabled(false);
+        findViewById(R.id.fb_login_custom_button).setBackgroundColor(
+                getResources().getColor(R.color.grey, getTheme()));
     }
 
     @Override
@@ -281,8 +287,8 @@ public class SocialLoginActivity extends AppCompatActivity
         if(facebookLoginInfo == null && twitterLoginInfo == null){
 
             new FancyGifDialog.Builder(this)
-                    .setTitle("Wi-Fi or Bluetooth disabled?")
-                    .setMessage("Please, enable both Wi-Fi and Bluetooth to start a new reading.")
+                    .setTitle("No Social Networks?")
+                    .setMessage("Please, log-in to at least one Social Network.")
                     .setPositiveBtnBackground("#966E5C")
                     .setPositiveBtnText("Ok")
                     .setNegativeBtnText("Cancel")
