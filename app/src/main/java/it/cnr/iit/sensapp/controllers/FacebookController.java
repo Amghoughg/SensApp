@@ -8,7 +8,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class FacebookController {
 
                         try {
                             posts.add(new Post(resp.getJSONObject(i)));
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                 }
@@ -92,7 +91,7 @@ public class FacebookController {
 
                             try {
                                 data = response.getJSONObject().getJSONArray("data");
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
@@ -148,7 +147,7 @@ public class FacebookController {
 
                             listener.onFacebookLoginInfo(facebookLoginInfo);
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             listener.onFacebookLoginInfo(null);
                             e.printStackTrace();
                         }
@@ -193,7 +192,7 @@ public class FacebookController {
                                 }
                             }
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -223,7 +222,7 @@ public class FacebookController {
                             JSONArray data = response.getJSONObject().getJSONArray("data");
                             music = data.length();
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -253,7 +252,7 @@ public class FacebookController {
                             JSONArray data = response.getJSONObject().getJSONArray("data");
                             books = data.length();
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -282,7 +281,7 @@ public class FacebookController {
                             JSONArray data = response.getJSONObject().getJSONArray("data");
                             photos = data.length();
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -317,7 +316,7 @@ public class FacebookController {
                             JSONArray data = response.getJSONObject().getJSONArray("data");
                             photos = data.length();
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -353,7 +352,7 @@ public class FacebookController {
                             JSONArray data = response.getJSONObject().getJSONArray("data");
                             videos = data.length();
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -388,7 +387,7 @@ public class FacebookController {
                             JSONArray data = response.getJSONObject().getJSONArray("data");
                             videos = data.length();
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -450,7 +449,7 @@ public class FacebookController {
                             if(subList.size() > 2) third = subList.get(2).tag + "\n("+subList.get(2).frequency+")";
 
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -488,7 +487,7 @@ public class FacebookController {
                                     coverUrl = event.getJSONObject("cover").getString("source");
                             }
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -532,7 +531,7 @@ public class FacebookController {
 
                             }
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -567,7 +566,7 @@ public class FacebookController {
 
                             total = data.length();
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -596,7 +595,7 @@ public class FacebookController {
 
                             total = data.length();
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -625,7 +624,7 @@ public class FacebookController {
 
                             total = data.length();
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 

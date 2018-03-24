@@ -82,7 +82,7 @@
                     "logFile": "hardware_info.csv"
                 },
                 {
-                    "name" : "MultimediaProbe",
+                    "name": "MultimediaProbe",
                     "logFile": "multimedia.csv"
                 },
                 {
@@ -106,6 +106,15 @@
                     "name" : "BatteryProbe",
                     "interval" : 60,
                     "logFile" : "battery.csv"
+                },
+                {
+                    "name" : "BluetoothConnProbe",
+                    "logFile" : "bt_conn.csv"
+                },
+                {
+                    "name" : "BluetoothScanProbe",
+                    "interval" : 60,
+                    "logFile" : "bt_scan.csv"
                 },
                 {
                     "name" : "CallsProbe",
@@ -160,6 +169,17 @@
                     "name" : "AppsUsageProbe",
                     "interval" : 3600,
                     "logFile" : "apps_usage.csv"
+                },
+                {
+                    "name" : "WiFiProbe",
+                    "interval" : 180,
+                    "logFile" : "wifi_scans.csv"
+                },
+                {
+                    "name" : "WiFiP2PProbe",
+                    "interval" : 120,
+                    "startDelay" : 120,
+                    "logFile" : "wifi_p2p_scans.csv"
                 },
                 {
                     "name" : "SmsProbe",

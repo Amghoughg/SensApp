@@ -3,6 +3,7 @@ package it.cnr.iit.sensapp;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +40,7 @@ import it.cnr.iit.sensapp.controllers.UIController;
 import it.cnr.iit.sensapp.model.Post;
 import it.cnr.iit.sensapp.utils.ChartData;
 import it.cnr.iit.sensapp.utils.CircleTransformation;
+import it.matbell.ask.ASK;
 import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,
@@ -82,14 +84,24 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         ((AVLoadingIndicatorView) findViewById(R.id.fb_places_avi)).show();
         ((AVLoadingIndicatorView) findViewById(R.id.fb_event_avi)).show();
         ((AVLoadingIndicatorView) findViewById(R.id.fb_fitness_avi)).show();
-
-        downloadData();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startService();
+
+        refreshLayout.setRefreshing(true);
+
+        downloadData();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //startService();
+                ASK ask = new ASK(getApplicationContext(), getApplicationContext().getString(R.string.ask_conf));
+                ask.start();
+            }
+        }, 10000);
     }
 
     @Override
@@ -157,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void startService(){
         Intent startIntent = new Intent(MainActivity.this, ForegroundService.class);
-        //startService(startIntent);
+        startService(startIntent);
     }
 
     private void downloadTwitterGeneralInfo(){

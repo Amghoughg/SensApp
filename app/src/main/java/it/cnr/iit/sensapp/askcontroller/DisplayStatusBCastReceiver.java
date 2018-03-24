@@ -3,6 +3,7 @@ package it.cnr.iit.sensapp.askcontroller;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 
 import it.cnr.iit.sensapp.R;
@@ -28,15 +29,15 @@ public class DisplayStatusBCastReceiver extends BroadcastReceiver {
 
                 case Intent.ACTION_USER_PRESENT:
                     Log.i(TAG,"User is present");
-                    ask.start();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ask.start();
+                        }
+                    }, 5000);
                     break;
 
             }
         }
     }
-
-
-
-
-
 }

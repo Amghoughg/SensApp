@@ -25,5 +25,4 @@ public class CustomApplication extends Application {
         ACRA.init(this);
         Twitter.initialize(this);
     }
-
 }

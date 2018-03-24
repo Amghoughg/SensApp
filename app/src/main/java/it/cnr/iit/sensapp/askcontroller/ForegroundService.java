@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -35,31 +36,33 @@ public class ForegroundService extends Service {
 
         Log.d(TAG, "Start service");
 
+        Notification.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationController.createChannel(getApplicationContext());
+            builder = new Notification.Builder(this, NotificationController.CHANNEL_ID);
+        }else
+            builder = new Notification.Builder(this);
+
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
 
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-
-        Notification notification = new NotificationCompat.Builder(this,
-                getString(R.string.app_name))
-                .setContentTitle(getString(R.string.app_name))
-                .setTicker(getString(R.string.app_name))
+        builder.setSmallIcon(R.mipmap.ic_foot)
                 .setContentText("Sensing is on")
-                .setSmallIcon(R.mipmap.ic_foot)
-                .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128,
-                        false))
                 .setContentIntent(pendingIntent)
                 .setOngoing(true).build();
-        startForeground(101, notification);
+
+        startForeground(101, builder.build());
 
         IntentFilter screenStateFilter = new IntentFilter();
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
         screenStateFilter.addAction(Intent.ACTION_USER_PRESENT);
 
-        receiver = new DisplayStatusBCastReceiver();
-        registerReceiver(receiver, screenStateFilter);
+        if(receiver == null) {
+            receiver = new DisplayStatusBCastReceiver();
+            registerReceiver(receiver, screenStateFilter);
+        }
 
         ASK ask = new ASK(getApplicationContext(), getApplicationContext().getString(R.string.ask_conf));
         ask.start();
@@ -87,9 +90,9 @@ public class ForegroundService extends Service {
     @Override
     public void onDestroy() {
         //TaskController.getInstance().stopTask();
-        ASK ask = new ASK(getApplicationContext(),
-                getApplicationContext().getString(R.string.ask_conf));
-        ask.stop();
+        //ASK ask = new ASK(getApplicationContext(),
+        //        getApplicationContext().getString(R.string.ask_conf));
+        //ask.stop();
         unregisterReceiver(receiver);
     }
 }
