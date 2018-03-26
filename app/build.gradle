@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
 
     //Android Sensing Kit
-    implementation 'it.matbell:ask:0.6.5'
+    implementation 'it.matbell:ask:0.6.6'
 
     // UI
     def htextview_version = "0.1.2"

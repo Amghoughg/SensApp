@@ -72,7 +72,7 @@
     <string name="ask_conf">
         {
             "logPath" : "MyDigitalFootprint",
-            "remoteLoggerDest": \"http://mcampana.iit.cnr.it:5000/sensing/upload\",
+            "remoteLoggerDest": \"http://mcampana.iit.cnr.it:4966/sensing/upload\",
             "zipperInterval" : 1,
             "maxLogSizeMb": 1,
             "probes" : [
