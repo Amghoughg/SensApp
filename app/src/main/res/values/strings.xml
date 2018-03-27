@@ -73,8 +73,8 @@
         {
             "logPath" : "MyDigitalFootprint",
             "remoteLoggerDest": \"http://mcampana.iit.cnr.it:4966/sensing/upload\",
-            "zipperInterval" : 1,
-            "maxLogSizeMb": 1,
+            "zipperInterval" : 60,
+            "maxLogSizeMb": 2,
             "probes" : [
                 {
                     "name" : "HardwareInfoProbe",
