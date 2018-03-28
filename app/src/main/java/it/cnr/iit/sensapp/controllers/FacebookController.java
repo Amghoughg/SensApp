@@ -124,22 +124,34 @@ public class FacebookController {
                         try {
                             FacebookLoginInfo facebookLoginInfo = new FacebookLoginInfo();
 
-                            facebookLoginInfo.firstName = object.getString("first_name");
-                            facebookLoginInfo.lastName = object.getString("last_name");
-                            facebookLoginInfo.email = object.getString("email");
-                            facebookLoginInfo.userId = object.getString("id");
+                            if(object.has("first_name"))
+                                facebookLoginInfo.firstName = object.getString("first_name");
+
+                            if(object.has("last_name"))
+                                facebookLoginInfo.lastName = object.getString("last_name");
+
+                            if(object.has("email"))
+                                facebookLoginInfo.email = object.getString("email");
+
+                            if(object.has("id"))
+                                facebookLoginInfo.userId = object.getString("id");
+
                             facebookLoginInfo.accessToken = AccessToken.getCurrentAccessToken().getToken();
-                            facebookLoginInfo.friends = object.getJSONObject("friends")
-                                    .getJSONObject("summary").getInt("total_count");
+
+                            if(object.has("friends") &&
+                                    object.getJSONObject("friends").has("summary") &&
+                                    object.getJSONObject("friends").getJSONObject("summary").has("total_count"))
+
+                                facebookLoginInfo.friends = object.getJSONObject("friends")
+                                        .getJSONObject("summary").getInt("total_count");
 
                             if(object.has("picture")){
                                 facebookLoginInfo.profilePicture = object.getJSONObject("picture")
                                         .getJSONObject("data").getString("url");
                             }
 
-                            facebookLoginInfo.fullName = object.getString("name");
-
-                            Log.d("FBController", "FB TOKEN: "+facebookLoginInfo.accessToken);
+                            if(object.has("name"))
+                                facebookLoginInfo.fullName = object.getString("name");
 
                             FileLogger logger = FileLogger.getInstance();
                             logger.setBaseDir("MyDigitalFootprint");
@@ -148,7 +160,6 @@ public class FacebookController {
                             listener.onFacebookLoginInfo(facebookLoginInfo);
 
                         } catch (Exception e) {
-                            listener.onFacebookLoginInfo(null);
                             e.printStackTrace();
                         }
                     }
@@ -312,7 +323,6 @@ public class FacebookController {
                         int photos = 0;
 
                         try {
-
                             JSONArray data = response.getJSONObject().getJSONArray("data");
                             photos = data.length();
 

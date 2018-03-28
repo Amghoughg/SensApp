@@ -116,7 +116,8 @@ public class UIController {
         chart.getXAxis().setValueFormatter(new LabelFormatter(frequencyData));
         chart.getAxisLeft().setGranularity(1.0f);
         chart.getAxisLeft().setGranularityEnabled(true);
-        chart.getAxisLeft().setAxisMaximum(Collections.max(frequencyData));
+        if(frequencyData.size() != 0)
+            chart.getAxisLeft().setAxisMaximum(Collections.max(frequencyData));
         chart.setDrawBorders(false);
         chart.getAxisRight().setDrawAxisLine(false);
         chart.getAxisLeft().setDrawAxisLine(false);

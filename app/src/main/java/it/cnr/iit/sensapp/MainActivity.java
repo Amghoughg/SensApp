@@ -154,6 +154,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         }else{
             findViewById(R.id.fb_stats_card).setVisibility(View.GONE);
+            findViewById(R.id.fb_activity_card).setVisibility(View.GONE);
+            findViewById(R.id.fb_activities_card).setVisibility(View.GONE);
+            findViewById(R.id.fb_places_card).setVisibility(View.GONE);
+            findViewById(R.id.fb_photos_card).setVisibility(View.GONE);
+            findViewById(R.id.fb_videos_card).setVisibility(View.GONE);
+            findViewById(R.id.fb_events_card).setVisibility(View.GONE);
+            findViewById(R.id.fb_pages_card).setVisibility(View.GONE);
+            findViewById(R.id.fb_fitness_card).setVisibility(View.GONE);
         }
 
         twitterId = PreferencesController.isTwitterLogged(this);
@@ -507,8 +515,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         FacebookController.FBStats stats = FacebookController.getStats(posts);
 
-        String likesPerc = String.format(Locale.getDefault(), "%.2f%%", stats.likesPerc);
-        String sharedPerc = String.format(Locale.getDefault(), "%.2f%%", stats.sharedPerc);
+        String likesPerc = String.format(Locale.getDefault(), "%.2f%%",
+                Float.isNaN(stats.likesPerc) ? 0.0f : stats.likesPerc);
+        String sharedPerc = String.format(Locale.getDefault(), "%.2f%%",
+                Float.isNaN(stats.sharedPerc) ? 0.0f : stats.sharedPerc);
 
         findViewById(R.id.fb_stats_container).setVisibility(View.VISIBLE);
         ((TextView) findViewById(R.id.fb_likes_perc)).setText(likesPerc);

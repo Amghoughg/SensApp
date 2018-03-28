@@ -215,6 +215,8 @@ public class SocialLoginActivity extends AppCompatActivity
         @Override
         public void onCancel() {
             Log.e(TAG, "FB Login canceled.");
+            fblogin = false;
+            avi.hide();
         }
 
         @Override
@@ -231,13 +233,15 @@ public class SocialLoginActivity extends AppCompatActivity
 
         this.facebookLoginInfo = loginInfo;
 
-        fillViews(loginInfo.profilePicture, loginInfo.fullName);
+        if(loginInfo != null) {
+
+            fillViews(loginInfo.profilePicture, loginInfo.fullName);
+            findViewById(R.id.fb_login_custom_button).setEnabled(false);
+            findViewById(R.id.fb_login_custom_button).setBackgroundColor(
+                    getResources().getColor(R.color.grey, getTheme()));
+        }
 
         fblogin = false;
-
-        findViewById(R.id.fb_login_custom_button).setEnabled(false);
-        findViewById(R.id.fb_login_custom_button).setBackgroundColor(
-                getResources().getColor(R.color.grey, getTheme()));
     }
 
     @Override

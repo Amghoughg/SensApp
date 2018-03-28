@@ -30,7 +30,6 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-permission
@@ -68,8 +67,6 @@
                 <data android:scheme="pdk4947235815041284278" />
             </intent-filter>
         </activity>
-
-
 
         <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
