@@ -1,5 +1,6 @@
 package it.cnr.iit.sensapp.setup.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -45,8 +46,8 @@ public class SetupPrivacyFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
-                        ((SetupActivity)getActivity()).nextFragment(1);
+                        Activity main = getActivity();
+                        if(main != null) ((SetupActivity)main).nextFragment(1);
 
                     }
                 }, BUTTON_ANIM_DURATION*2);

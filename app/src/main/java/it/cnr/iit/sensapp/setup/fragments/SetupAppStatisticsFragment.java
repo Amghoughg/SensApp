@@ -1,5 +1,6 @@
 package it.cnr.iit.sensapp.setup.fragments;
 
+import android.app.Activity;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
@@ -59,14 +60,19 @@ public class SetupAppStatisticsFragment extends Fragment {
                     }, BUTTON_ANIM_DURATION);
 
                 }else{
-                    if(AutoStartController.requestIsNeeded())
-                        ((SetupActivity)getActivity()).nextFragment(1);
-                    else{
-                        Intent intent = new Intent(getContext(),
-                                ((SetupActivity)getActivity()).socialLoginClass);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        getActivity().finish();
+
+                    Activity main = getActivity();
+
+                    if(main != null){
+
+                        if(AutoStartController.requestIsNeeded())
+                            ((SetupActivity)main).nextFragment(1);
+                        else{
+                            Intent intent = new Intent(getContext(), ((SetupActivity) main).socialLoginClass);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            main.finish();
+                        }
                     }
                 }
             }

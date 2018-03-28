@@ -158,21 +158,23 @@ public class SocialLoginActivity extends AppCompatActivity
             @Override
             public void success(Result<User> userResult) {
 
-                twitterLoginInfo.userId = userResult.data.id;
-                twitterLoginInfo.email = userResult.data.email;
-                twitterLoginInfo.name = userResult.data.name;
-                twitterLoginInfo.screenName = userResult.data.screenName;
+                if(userResult != null && userResult.data != null) {
+                    twitterLoginInfo.userId = userResult.data.id;
+                    twitterLoginInfo.email = userResult.data.email;
+                    twitterLoginInfo.name = userResult.data.name;
+                    twitterLoginInfo.screenName = userResult.data.screenName;
 
-                FileLogger logger = FileLogger.getInstance();
-                logger.setBaseDir(getResources().getString(R.string.app_name));
-                logger.store("osn_accounts.csv", twitterLoginInfo, false);
+                    FileLogger logger = FileLogger.getInstance();
+                    logger.setBaseDir(getResources().getString(R.string.app_name));
+                    logger.store("osn_accounts.csv", twitterLoginInfo, false);
 
-                fillViews(userResult.data.profileImageUrl.replace("_normal", ""),
-                        userResult.data.name);
+                    fillViews(userResult.data.profileImageUrl.replace("_normal", ""),
+                            userResult.data.name);
 
-                twitterLoginButton.setEnabled(false);
-                twitterLoginButton.setBackgroundColor(
-                        getResources().getColor(R.color.grey, getTheme()));
+                    twitterLoginButton.setEnabled(false);
+                    twitterLoginButton.setBackgroundColor(
+                            getResources().getColor(R.color.grey, getTheme()));
+                }
             }
 
             @Override

@@ -1,6 +1,7 @@
 package it.cnr.iit.sensapp.setup.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -79,10 +80,12 @@ public class SetupPermissionsFragment extends Fragment {
             }
         }
 
+        Activity main = getActivity();
+
         if(require)
             ActivityCompat.requestPermissions(getActivity(), RUNTIME_PERMISSIONS, REQ_CODE);
-        else
-            ((SetupActivity)getActivity()).nextFragment(1);
+        else if(main != null)
+            ((SetupActivity)main).nextFragment(1);
     }
 
     @Override
