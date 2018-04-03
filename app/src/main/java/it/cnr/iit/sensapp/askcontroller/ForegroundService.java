@@ -54,7 +54,7 @@ public class ForegroundService extends Service {
 
         startForeground(101, builder.build());
 
-        IntentFilter screenStateFilter = new IntentFilter();
+        /*IntentFilter screenStateFilter = new IntentFilter();
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
         screenStateFilter.addAction(Intent.ACTION_USER_PRESENT);
@@ -62,7 +62,7 @@ public class ForegroundService extends Service {
         if(receiver == null) {
             receiver = new DisplayStatusBCastReceiver();
             registerReceiver(receiver, screenStateFilter);
-        }
+        }*/
 
         ASK ask = new ASK(getApplicationContext(), getApplicationContext().getString(R.string.ask_conf));
         ask.start();

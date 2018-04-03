@@ -15,7 +15,10 @@ public class NotificationController {
     public static void createChannel(Context context){
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_LOW);
-        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).
-                createNotificationChannel(channel);
+        NotificationManager nm =((NotificationManager) context.getSystemService(
+                Context.NOTIFICATION_SERVICE));
+        if(nm != null){
+            nm.createNotificationChannel(channel);
+        }
     }
 }

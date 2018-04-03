@@ -94,14 +94,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         downloadData();
 
-        new Handler().postDelayed(new Runnable() {
+        startService();
+
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                //startService();
-                ASK ask = new ASK(getApplicationContext(), getApplicationContext().getString(R.string.ask_conf));
+                startService();
+                /*ASK ask = new ASK(getApplicationContext(), getApplicationContext().getString(R.string.ask_conf));
                 ask.start();
             }
-        }, 10000);
+        }, 1000);*/
     }
 
     @Override
