@@ -81,6 +81,10 @@
 
         <service android:name="it.matbell.ask.ASKManager" />
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
 
         <!-- FACEBOOK -->
         <meta-data android:name="com.facebook.sdk.ApplicationId"

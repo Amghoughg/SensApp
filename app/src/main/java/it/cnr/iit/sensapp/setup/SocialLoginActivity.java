@@ -58,8 +58,7 @@ public class SocialLoginActivity extends AppCompatActivity
     private CallbackManager callbackManager;
     // See https://developers.facebook.com/docs/facebook-login/permissions/
     private static final String[] FB_PERMISSIONS = {"email", "public_profile", "user_friends",
-            "user_birthday", "user_actions.books", "user_actions.fitness", "user_actions.music",
-            "user_actions.video", "user_likes", "user_photos", "user_posts", "user_tagged_places",
+            "user_birthday", "user_likes", "user_photos", "user_posts", "user_tagged_places",
             "user_videos", "user_events"};
 
     @Override

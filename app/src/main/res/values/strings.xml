@@ -172,7 +172,7 @@
                 },
                 {
                     "name" : "WiFiProbe",
-                    "interval" : 180,
+                    "interval" : 240,
                     "logFile" : "wifi_scans.csv"
                 },
                 {
